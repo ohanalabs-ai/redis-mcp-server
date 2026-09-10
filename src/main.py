@@ -46,6 +46,7 @@ class RedisMCPServer:
 @click.command()
 @click.option(
     "--url",
+    envvar="REDIS_URL",
     help="Redis connection URI (redis://user:pass@host:port/db or rediss:// for SSL)",
 )
 @click.option(
