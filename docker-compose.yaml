@@ -1,0 +1,34 @@
+name: redis-mcp-server
+
+services:
+  redis-mcp-server:
+    build:
+      context: .
+    image: redis-mcp-server:local
+    restart: unless-stopped
+    ports:
+      - "${HTTP_PORT:-8000}:${HTTP_PORT:-8000}"
+    environment:
+      TRANSPORT: "${TRANSPORT:-http}"
+      HTTP_HOST: "${HTTP_HOST:-0.0.0.0}"
+      HTTP_PORT: "${HTTP_PORT:-8000}"
+      REDIS_URL: "${REDIS_URL:-}"
+      REDIS_HOST: "${REDIS_HOST:-127.0.0.1}"
+      REDIS_PORT: "${REDIS_PORT:-6379}"
+      REDIS_DB: "${REDIS_DB:-0}"
+      REDIS_USERNAME: "${REDIS_USERNAME:-}"
+      REDIS_PWD: "${REDIS_PWD:-}"
+      REDIS_SSL: "${REDIS_SSL:-false}"
+      REDIS_SSL_CA_PATH: "${REDIS_SSL_CA_PATH:-}"
+      REDIS_SSL_KEYFILE: "${REDIS_SSL_KEYFILE:-}"
+      REDIS_SSL_CERTFILE: "${REDIS_SSL_CERTFILE:-}"
+      REDIS_SSL_CERT_REQS: "${REDIS_SSL_CERT_REQS:-required}"
+      REDIS_SSL_CA_CERTS: "${REDIS_SSL_CA_CERTS:-}"
+      REDIS_TOPOLOGY: "${REDIS_TOPOLOGY:-standalone}"
+      REDIS_CLUSTER_MODE: "${REDIS_CLUSTER_MODE:-false}"
+      REDIS_SENTINEL_MASTER_NAME: "${REDIS_SENTINEL_MASTER_NAME:-}"
+      REDIS_SENTINEL_NODES: "${REDIS_SENTINEL_NODES:-}"
+      REDIS_SENTINEL_HOST: "${REDIS_SENTINEL_HOST:-}"
+      REDIS_SENTINEL_PORT: "${REDIS_SENTINEL_PORT:-26379}"
+      REDIS_SENTINEL_USERNAME: "${REDIS_SENTINEL_USERNAME:-}"
+      REDIS_SENTINEL_PWD: "${REDIS_SENTINEL_PWD:-}"

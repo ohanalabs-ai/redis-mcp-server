@@ -3,6 +3,7 @@ Unit tests for src/main.py
 """
 
 import logging
+import os
 
 from unittest.mock import Mock, patch
 
@@ -72,6 +73,12 @@ class TestCLI:
     def setup_method(self):
         """Set up test fixtures."""
         self.runner = CliRunner()
+        self.env_patcher = patch.dict(os.environ, {"REDIS_URL": ""}, clear=False)
+        self.env_patcher.start()
+
+    def teardown_method(self):
+        """Restore environment overrides."""
+        self.env_patcher.stop()
 
     @patch("src.main.parse_redis_uri")
     @patch("src.main.set_redis_config_from_cli")
@@ -97,6 +104,45 @@ class TestCLI:
             {
                 "host": "localhost",
                 "port": 6379,
+                "topology": "standalone",
+                "cluster_mode": False,
+            }
+        )
+        mock_server_class.assert_called_once_with(
+            transport="stdio", http_host="127.0.0.1", http_port=8000
+        )
+        mock_server.run.assert_called_once()
+
+    @patch("src.main.parse_redis_uri")
+    @patch("src.main.set_redis_config_from_cli")
+    @patch("src.main.RedisMCPServer")
+    def test_cli_with_url_from_environment(
+        self, mock_server_class, mock_set_config, mock_parse_uri
+    ):
+        """Test CLI with REDIS_URL environment variable."""
+        mock_parse_uri.return_value = {
+            "host": "env-host",
+            "port": 6380,
+            "db": 2,
+            "topology": "standalone",
+            "cluster_mode": False,
+        }
+        mock_server = Mock()
+        mock_server_class.return_value = mock_server
+
+        result = self.runner.invoke(
+            cli,
+            [],
+            env={"REDIS_URL": "redis://env-host:6380/2"},
+        )
+
+        assert result.exit_code == 0
+        mock_parse_uri.assert_called_once_with("redis://env-host:6380/2")
+        mock_set_config.assert_called_once_with(
+            {
+                "host": "env-host",
+                "port": 6380,
+                "db": 2,
                 "topology": "standalone",
                 "cluster_mode": False,
             }
@@ -337,6 +383,12 @@ class TestTransportProtocols:
     def setup_method(self):
         """Set up test fixtures."""
         self.runner = CliRunner()
+        self.env_patcher = patch.dict(os.environ, {"REDIS_URL": ""}, clear=False)
+        self.env_patcher.start()
+
+    def teardown_method(self):
+        """Restore environment overrides."""
+        self.env_patcher.stop()
 
     @patch("src.main.set_redis_config_from_cli")
     @patch("src.main.RedisMCPServer")

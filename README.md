@@ -259,6 +259,17 @@ If you'd like to build your own image, the Redis MCP Server provides a Dockerfil
 docker build -t mcp-redis .
 ```
 
+#### Docker Compose local HTTP deployment
+
+For a local Streamable HTTP deployment, copy `.env.example`, adjust your Redis connection settings, and start the service with Docker Compose:
+
+```bash
+cp .env.example .env
+docker compose up --build -d
+```
+
+The HTTP transport is exposed at `http://localhost:8000/mcp` by default. Existing stdio-based Docker usage remains unchanged.
+
 #### Docker Transport Protocol Support
 
 The Docker image supports multiple transport protocols through environment variables:
