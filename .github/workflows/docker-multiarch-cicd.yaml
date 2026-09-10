@@ -43,6 +43,7 @@ jobs:
       docker-compose-target-service: redis-mcp-server
       dockerhub-registry: docker.io
       dockerhub-namespace: ${{ github.repository_owner }}
+      # Docker Hub credentials are intentionally omitted here because the reusable
+      # workflow currently exposes them as string inputs rather than workflow_call
+      # secrets. GHCR builds remain supported for PRs and branch pushes.
       push-attestations: "false"
-      dockerhub-registry-username: ${{ secrets.DOCKERHUB_REGISTRY_USERNAME }}
-      dockerhub-registry-token: ${{ secrets.DOCKERHUB_REGISTRY_TOKEN }}
