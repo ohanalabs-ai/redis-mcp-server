@@ -261,7 +261,7 @@ docker build -t mcp-redis .
 
 #### Docker Compose local HTTP deployment
 
-For a local Streamable HTTP deployment, copy `.env.example`, adjust your Redis connection settings, and start the service with Docker Compose:
+For a local Streamable HTTP deployment, copy `.env.example`, set either `REDIS_URL` or the fallback `REDIS_*` connection settings, and start the service with Docker Compose:
 
 ```bash
 cp .env.example .env
